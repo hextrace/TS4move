@@ -1,10 +1,8 @@
 from pathlib import Path
-from psutil._common import sdiskpart
 from psutil import disk_partitions, disk_usage
 import subprocess
 from shutil import which
 from sys import platform
-from typing import List, Dict
 
 # Exit if OS is not macOS or Windows
 if (not platform == 'darwin') and (not platform == 'win32'):
@@ -30,10 +28,10 @@ def get_ea_folder():
 
 
 # Create and return a dictionary of non-root drives
-def get_drives() -> object:
-    a: int = 1
-    partitions: List[sdiskpart] = disk_partitions()
-    drives: Dict[int, str] = {}
+def get_drives():
+    a = 1
+    partitions = disk_partitions()
+    drives = {}
     # MacOS Magic
     if 'darwin' == platform:
         p: sdiskpart
@@ -55,7 +53,7 @@ if '__main__' == __name__:
 
     ts4_dir: Path = Path('The Sims 4')                                  # The folder to move
     old_ts4_root: Path = Path(Path(get_ea_folder()), Path(ts4_dir))     # The Default TS4 folder
-    drive: int = -1                                                     # Initialize user input
+    drive = -1                                                          # Initialize user input
 
     print(f'{"=" * 75}')
     print(f'Operating System: {"macOS" if "darwin" == platform else "Windows"}')
@@ -66,8 +64,6 @@ if '__main__' == __name__:
 
     user_drives = get_drives()
 
-    k: object
-    v: object
     for k, v in user_drives.items():
         free_space = format((disk_usage(str(v)).free / 1073741824), ".2f")
         print(f'{k}) Drive/Mount: {v} :: Free Space: {free_space} GB')
