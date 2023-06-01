@@ -1,24 +1,35 @@
+import os
 from pathlib import Path
 from psutil._common import sdiskpart
 from psutil import disk_partitions, disk_usage
 from sys import platform
+from typing import List, Dict
 
+# Exit if OS is not macOS or Windows
 if (not platform == 'darwin') and (not platform == 'win32'):
     print(f'{platform} is not a supported OS. Exiting.')
     exit(0)
 
-# Default Environmental Stuff
-ts4_dir: Path = Path('The Sims 4')
-old_ts4_root: Path = Path('~/Documents/Electronic Arts/', ts4_dir).expanduser()
-drive: int = 0
+
+# Get the default path for the EA folder, exit if it does not exist
+def get_ea_folder():
+    if 'win32' == platform:
+        ea_folder = Path(Path(os.popen('[Environment]::GetFolderPath("MyDocuments")').read()), Path('Electronic Arts'))
+    else:
+        ea_folder = Path(Path('~/Documents').expanduser(), Path('Electronic Arts'))
+
+    if ea_folder.is_dir():
+        return ea_folder
+    else:
+        print(f'{ea_folder} cannot be found. Please start and exit The Sims 4 at least once before trying again.')
+        exit(0)
 
 
-# Functions
-# Enumerate and display drives based on platform
+# Create and return a dictionary of non-root drives
 def get_drives() -> object:
     a: int = 1
-    partitions: list[sdiskpart] = disk_partitions()
-    drives: dict[int, str] = {}
+    partitions: List[sdiskpart] = disk_partitions()
+    drives: Dict[int, str] = {}
     # MacOS Magic
     if 'darwin' == platform:
         p: sdiskpart
@@ -37,6 +48,14 @@ def get_drives() -> object:
 
 
 if '__main__' == __name__:
+
+    ts4_dir: Path = Path('The Sims 4')                                  # The folder to move
+    old_ts4_root: Path = Path(Path(get_ea_folder()), Path(ts4_dir))     # The Default TS4 folder
+    drive: int = -1                                                     # Initialize user input
+
+    print(f'{"=" * 75}')
+    print(f'Operating System: {"macOS" if "darwin" == platform else "Windows"}')
+    print(f'Default path to The Sims 4: \n\t{old_ts4_root}')
     print(f'{"=" * 75}')
     print('Available Drives:'.center(75))
     print(f'{"-" * 75}')
@@ -58,8 +77,10 @@ if '__main__' == __name__:
         except ValueError:
             print(f'Invalid selection. Please try again.')
 
+    print(f'{"-" * 75}')
     print(f'You have selected {user_drives[drive]}')
     new_ts4_root = Path(user_drives[drive], ts4_dir)
 
     print(f'The Sims 4 default location: {old_ts4_root}')
     print(f'The Sims 4 new location: {new_ts4_root}')
+    print(f'{"-" * 75}')
