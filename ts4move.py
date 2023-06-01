@@ -1,7 +1,8 @@
-import os
 from pathlib import Path
 from psutil._common import sdiskpart
 from psutil import disk_partitions, disk_usage
+import subprocess
+from shutil import which
 from sys import platform
 from typing import List, Dict
 
@@ -14,7 +15,10 @@ if (not platform == 'darwin') and (not platform == 'win32'):
 # Get the default path for the EA folder, exit if it does not exist
 def get_ea_folder():
     if 'win32' == platform:
-        ea_folder = Path(Path(os.popen('[Environment]::GetFolderPath("MyDocuments")').read()), Path('Electronic Arts'))
+        shell = "pwsh.exe -Command" if which("pwsh.exe") is not None else "powershell.exe"
+        pwsh_cmd = subprocess.run(f"{shell} [Environment]::GetFolderPath('MyDocuments')", shell=True, capture_output=True, text=True)
+        usr_docs = pwsh_cmd.stdout.strip('\n')
+        ea_folder = Path(Path(str(usr_docs)), Path('Electronic Arts'))
     else:
         ea_folder = Path(Path('~/Documents').expanduser(), Path('Electronic Arts'))
 
