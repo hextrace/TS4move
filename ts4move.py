@@ -14,7 +14,8 @@ if (not platform == 'darwin') and (not platform == 'win32'):
 def get_ea_folder():
     if 'win32' == platform:
         shell = "pwsh.exe -Command" if which("pwsh.exe") is not None else "powershell.exe"
-        pwsh_cmd = subprocess.run(f"{shell} [Environment]::GetFolderPath('MyDocuments')", shell=True, capture_output=True, text=True)
+        pwsh_cmd = subprocess.run(f"{shell} [Environment]::GetFolderPath('MyDocuments')", shell=True,
+                                  capture_output=True, text=True)
         usr_docs = pwsh_cmd.stdout.strip('\n')
         ea_folder = Path(Path(str(usr_docs)), Path('Electronic Arts'))
     else:
@@ -34,7 +35,6 @@ def get_drives():
     drives = {}
     # MacOS Magic
     if 'darwin' == platform:
-        p: sdiskpart
         for p in partitions:
             if p.mountpoint.startswith('/Volumes'):
                 drives[a] = p.mountpoint
