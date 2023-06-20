@@ -1,12 +1,11 @@
-from elevate import elevate
 import os
 import shutil
 from pathlib import Path
+from progress.bar import IncrementalBar
 from psutil import disk_partitions, disk_usage, process_iter
 import subprocess
-from shutil import which
+from shutil import which, move
 from sys import platform
-from ProgressBar import ProgressBar
 
 # Exit if OS is not macOS or Windows
 if (not platform == 'darwin') and (not platform == 'win32'):
@@ -62,62 +61,68 @@ def get_drives():
 
 
 # Print '=' x times.
-def print_bars(num):
+def print_bars(num: int):
     print(f'{"=" * num}')
 
 
 # Print '-' x times.
-def print_line(num):
+def print_line(num: int):
     print(f'{"-" * num}')
 
 
+def dir_walk(source: Path):
+    folders = list(d for d in sorted(source.iterdir()) if d.is_dir())
+    files = list(f for f in sorted(source.iterdir()) if f.is_file())
+    yield source, folders, files
+    for folder in folders:
+        yield from dir_walk(folder)
+
+
 # Count files
-def count_files(folder):
+def count_files(folder: Path):
     files = []
 
     if Path.is_dir(folder):
-        for path, dirs, filenames in os.walk(folder):
+        for root, folders, filenames in dir_walk(folder):
             files.extend(filenames)
 
     return len(files)
 
 
 # Make folders that do not exist
-def make_folders(folder):
+def make_folders(folder: Path):
     if not Path.exists(folder):
         Path.mkdir(folder)
 
 
 # Move folder
-def move_folder(source, destination):
+def move_folder(source: Path, destination: Path):
 
     number_of_files = count_files(source)
 
     if number_of_files > 0:
         make_folders(destination)
 
-        number_copied = 0
-        pbar = ProgressBar('Moving files...')
-
-        for p, folders, filenames in os.walk(source):
+    with IncrementalBar('Moving', max=number_of_files) as bar:
+        for root, folders, filenames in dir_walk(source):
             for folder in folders:
-                destination_folder = p.replace(source, destination)
-                make_folders(os.path.join(destination_folder, folder))
+                source_path = Path(root, folder)
+                destination_path = Path(str(source_path).replace(str(source), str(destination)))
+                make_folders(destination_path)
 
-            for filename in filenames:
-                source_file = os.path.join(path, filename)
-                destination_file = os.path.join(path.replace(source, destination), filename)
-                shutil.move(source_file, destination_file)
-                number_copied += 1
+            for file in filenames:
+                source_path = Path(root, file)
+                destination_path = Path(str(source_path).replace(str(source), str(destination)))
+                print(f'Moving {source_path} to {destination_path}')
+                move(source_path, destination_path)
 
-                pbar.calculateAndUpdate(number_copied, number_of_files)
-    print()
+            bar.next()
 
 
-def make_link(source, destination):
+def make_link(source: Path, destination: Path):
 
     if Path.exists(source) and Path.is_dir(source):
-        Path.rmdir(source)
+        shutil.rmtree(source)
 
     Path(source).symlink_to(destination, target_is_directory=True)
 
@@ -169,10 +174,14 @@ if '__main__' == __name__:
 
     print(f'The Sims 4 default location: {old_ts4_root}')
     print(f'The Sims 4 new location: {new_ts4_root}')
-    print_line(75)
+    print(f'Files to move: {count_files(old_ts4_root)}')
 
     # Move the stuff
+    print_line(75)
     move_folder(old_ts4_root, new_ts4_root)
 
     # Link the stuff
+    print_line(75)
+    print(f'Creating link from {old_ts4_root} to {new_ts4_root} ...')
     make_link(old_ts4_root, new_ts4_root)
+    print(f'Done.')
