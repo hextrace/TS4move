@@ -1,5 +1,7 @@
 # Installation & Usage
 > 1. Download from the [Releases page](https://github.com/hextrace/TS4move/releases/)
+> - Mac users will want to download `ts4move-macos.zip`
+> - Windows users will want to download `ts4move-windows.zip`
 > 2. Unzip the file
 > 3. Run the command using your system's elevated privileges.
 
