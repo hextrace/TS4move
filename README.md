@@ -1,6 +1,7 @@
 # Installation & Usage
-TS4Move can be downloaded from the Releases page.
-Please be sure to download for your operating system.
+> 1. Download from the [Releases page](https://github.com/hextrace/TS4move/releases/)
+> 2. Unzip the file
+> 3. Run the command using your system's elevated privileges.
 
 ---
 ## Windows
@@ -9,13 +10,13 @@ Please be sure to download for your operating system.
 > 3. Type `.\ts4move.exe`
 
 Example CMD commands:
-```cmd
-cd "%USERPROFILE%\Downloads"
+```commandline
+cd %USERPROFILE%\Downloads
 .\ts4move.exe
 ```
 
 Example PowerShell commands:
-```powershell
+```commandline
 cd ~\Downloads
 .\ts4move.exe
 ```
@@ -26,7 +27,7 @@ cd ~\Downloads
 > 3. Type `sudo ./ts4move`
 
 Example Terminal commands:
-```shell
+```commandline
 cd ~/Downloads/
 sudo ./ts4move
 ```
