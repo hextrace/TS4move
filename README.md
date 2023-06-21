@@ -4,9 +4,9 @@ Please be sure to download for your operating system.
 
 ---
 ## Windows
-1. Open an [elevated command prompt](https://www.lifewire.com/how-to-open-an-elevated-command-prompt-2618088)
-2. Navigate to where you downloaded the file
-3. Type `.\ts4move.exe`
+> 1. Open an [elevated command prompt](https://www.lifewire.com/how-to-open-an-elevated-command-prompt-2618088)
+> 2. Navigate to where you downloaded the file
+> 3. Type `.\ts4move.exe`
 
 Example CMD commands:
 ```cmd
@@ -21,9 +21,9 @@ cd ~\Downloads
 ```
 ---
 ## macOS
-1. Open Terminal
-2. Navigate to where you downloaded the file
-3. Type `sudo ./ts4move`
+> 1. Open Terminal
+> 2. Navigate to where you downloaded the file
+> 3. Type `sudo ./ts4move`
 
 Example Terminal commands:
 ```shell
@@ -39,16 +39,16 @@ The short answer is "**yes**".
 The long answer is that it can be done by moving the TS4 folder from a user's Documents folder and then making a symbolic link (or junction) in the Documents/Electronic Arts folder to point to where you moved the files to.
 
 This could be accomplished on Windows by running the following commands (assuming you have an external drive E:):
-1. Open an elevated command prompt (CMD)
-2. Type `move "%userprofile%\Documents\Electronic Arts\The Sims 4" "E:\The Sims 4"`
-3. Wait for the command to complete
-4. Type `mklink /j "%userprofile\Documents\Electronic Arts\The Sims 4" "E:\The Sims 4"`
+> 1. Open an elevated command prompt (CMD)
+> 2. Type `move "%userprofile%\Documents\Electronic Arts\The Sims 4" "E:\The Sims 4"`
+> 3. Wait for the command to complete
+> 4. Type `mklink /j "%userprofile\Documents\Electronic Arts\The Sims 4" "E:\The Sims 4"`
 
 In macOS, it's a similar process - let's assume you have an external drive entitled "DATA":
-1. Open Terminal
-2. Type `mv ~/Documents/Electronic\ Arts/The\ Sims\ 4 /Volumes/DATA/The\ Sims\ 4`
-3. Wait for command to complete
-4. Type `ln -s ~/Documents/Electronic\ Arts/The\ Sims\ 4 /Volumes/DATA/The\ Sims\ 4`
+> 1. Open Terminal
+> 2. Type `mv ~/Documents/Electronic\ Arts/The\ Sims\ 4 /Volumes/DATA/The\ Sims\ 4`
+> 3. Wait for command to complete
+> 4. Type `ln -s ~/Documents/Electronic\ Arts/The\ Sims\ 4 /Volumes/DATA/The\ Sims\ 4`
 
 These two processes, however, assume that the end user is comfortable with the command-lines of their respective systems and understand how the file systems of their systems work. This utility, though crude, does the above steps for the end user with the end user only needing to select the drive that they want to move the files to.
 
