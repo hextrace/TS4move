@@ -1,6 +1,7 @@
 # Installation & Usage
 TS4Move can be downloaded from the Releases page.
 Please be sure to download for your operating system.
+
 ---
 ## Windows
 1. Open an [elevated command prompt](https://www.lifewire.com/how-to-open-an-elevated-command-prompt-2618088)
