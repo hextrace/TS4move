@@ -1,7 +1,6 @@
-import os
 import shutil
 from pathlib import Path
-from progress.bar import IncrementalBar
+import progressbar
 from psutil import disk_partitions, disk_usage, process_iter
 import subprocess
 from shutil import which, move
@@ -29,7 +28,7 @@ def get_ea_folder():
     else:
         ea_folder = Path(Path('~/Documents').expanduser(), Path('Electronic Arts'))
 
-    if os.path.islink(Path(ea_folder, 'The Sims 4')):
+    if Path(ea_folder, 'The Sims 4').is_symlink():
         print(f'{Path(ea_folder, "The Sims 4")} appears to be a symlink already. Exiting program.')
         exit(0)
     elif ea_folder.is_dir():
@@ -103,7 +102,8 @@ def move_folder(source: Path, destination: Path):
     if number_of_files > 0:
         make_folders(destination)
 
-    with IncrementalBar('Moving', max=number_of_files) as bar:
+    with progressbar.ProgressBar(max_value=number_of_files) as bar:
+        idx = 0
         for root, folders, filenames in dir_walk(source):
             for folder in folders:
                 source_path = Path(root, folder)
@@ -111,12 +111,11 @@ def move_folder(source: Path, destination: Path):
                 make_folders(destination_path)
 
             for file in filenames:
+                idx += 1
                 source_path = Path(root, file)
                 destination_path = Path(str(source_path).replace(str(source), str(destination)))
-                print(f'Moving {source_path} to {destination_path}')
                 move(source_path, destination_path)
-
-            bar.next()
+                bar.update(idx)
 
 
 def make_link(source: Path, destination: Path):
@@ -163,7 +162,7 @@ if '__main__' == __name__:
                 exit(0)
             else:
                 drive = int(input(f'\nWhich drive would you like to move your Sims 4 folder to? '
-                                  f'[1 - {len(user_drives.keys())}] Press "0" to quit. '))
+                                  f'[1 - {len(user_drives.keys())}] Enter "{QUIT}" to quit. '))
         except ValueError:
             print(f'Invalid selection. Please try again.')
 
@@ -183,5 +182,5 @@ if '__main__' == __name__:
     # Link the stuff
     print_line(75)
     print(f'Creating link from {old_ts4_root} to {new_ts4_root} ...')
-    make_link(old_ts4_root, new_ts4_root)
+    # make_link(old_ts4_root, new_ts4_root)
     print(f'Done.')
