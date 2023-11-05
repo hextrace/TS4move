@@ -47,7 +47,7 @@ This could be accomplished on Windows by running the following commands (assumin
 > 1. Open an elevated command prompt (CMD)
 > 2. Type `move "%userprofile%\Documents\Electronic Arts\The Sims 4" "E:\The Sims 4"`
 > 3. Wait for the command to complete
-> 4. Type `mklink /j "%userprofile\Documents\Electronic Arts\The Sims 4" "E:\The Sims 4"`
+> 4. Type `mklink /j "%userprofile%\Documents\Electronic Arts\The Sims 4" "E:\The Sims 4"`
 
 In macOS, it's a similar process - let's assume you have an external drive entitled "DATA":
 > 1. Open Terminal
